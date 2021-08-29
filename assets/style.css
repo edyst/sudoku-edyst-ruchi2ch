@@ -1,0 +1,22 @@
+body{
+    font-family: Source Sans Pro,sans-serif;
+font-size: 25px;
+}
+table{
+    border:2px solid #344861;
+    border-collapse: collapse;
+}
+.border-bottom{
+    border-bottom: 2px solid #344861;
+}
+.border-right{
+    border-right: 2px solid #344861;
+}
+ td{
+    border: 1px solid #bec6d4;
+    border-collapse: collapse;
+}
+td{
+    height: 60px;
+width: 60px;
+}
