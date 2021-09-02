@@ -1,368 +1,454 @@
-/*  function setEasyBoard() {
-    const board = [
-      [6, 0, 0, 0, 0, 0, 0, 7, 0],
-      [0, 0, 0, 0, 0, 5, 0, 2, 0],
-      [0, 0, 0, 0, 0, 1, 0, 0, 0],
-      [3, 6, 2, 0, 0, 0, 0, 8, 1],
-      [0, 0, 9, 6, 0, 0, 0, 0, 0],
-      [7, 1, 0, 0, 9, 0, 4, 0, 5],
-      [0, 2, 0, 0, 0, 6, 5, 1, 0],
-      [0, 0, 7, 8, 0, 0, 0, 0, 3],
-      [4, 5, 0, 0, 0, 0, 0, 0, 0]
-    ];
-    const board1 = [
-      [6, 8, 5, 3, 2, 9, 1, 7, 4],
-      [9, 7, 1, 4, 8, 5, 3, 2, 6],
-      [2, 3, 4, 7, 6, 1, 8, 5, 9],
-      [3, 6, 2, 5, 7, 4, 9, 8, 1],
-      [5, 4, 9, 6, 1, 8, 7, 3, 2],
-      [7, 1, 8, 2, 9, 3, 4, 6, 5],
-      [8, 2, 3, 9, 4, 6, 5, 1, 7],
-      [1, 9, 7, 8, 5, 2, 6, 4, 3],
-      [4, 5, 6, 1, 3, 7, 2, 9, 8]
-    ];
-  
-    board.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        const cellIdx = rowIdx * 9 + colIdx + 1;
-        if (board[rowIdx][colIdx] === 0) {
-          document.querySelector(`#cell-${cellIdx} input`).value = "";
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-        } else {
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-          document.querySelector(`#cell-${cellIdx} input`).value =
-            board[rowIdx][colIdx];
-          document.querySelector(`#cell-${cellIdx}`).classList.add("placeholder")
-        }
-      });
-    });
-    function newValue(){
-    const values=[9][9];
-    board.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        const cellIdx = rowIdx * 9 + colIdx + 1;
-        values.push(document.querySelector(`#cell-${cellIdx} input`).value)
-    });
-  });
-  return values[9][9];
+const easy = [
+  "6------7------5-2------1---362----81--96-----71--9-4-5-2---651---78----345-------",
+  "685329174971485326234761859362574981549618732718293465823946517197852643456137298"
+];
+const medium = [
+  "--9-------4----6-758-31----15--4-36-------4-8----9-------75----3-------1--2--3---",
+  "619472583243985617587316924158247369926531478734698152891754236365829741472163895"
+];
+const hard = [
+  "-1-5-------97-42----5----7-5---3---7-6--2-41---8--5---1-4------2-3-----9-7----8--",
+  "712583694639714258845269173521436987367928415498175326184697532253841769976352841"
+];
+var selectedCell;
+var difficulty = easy[0];
+var answer = [""];
+let diffNum = 1;
+window.onload = function () {
+  startGame(); 
 }
-    function validateSudoku(){
-      let values=newValue();
-      board.forEach((row, rowIdx) => {
-        row.forEach((col, colIdx) => {
-          const cellIdx = rowIdx * 9 + colIdx + 1;
-          if (board1[rowIdx][colIdx] == values[rowIdx][colIdx]) {
-            document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-          } else {
-            document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-           document.querySelector(`#cell-${cellIdx}`).classList.add("cell-error")
+function changeDifficulty(n) {
+  switch(n)
+  {
+      case 1 :  window.difficulty = easy[0];
+      break;
+      case 2 :  window.difficulty = medium[0];
+      break;
+      case 3 :  window.difficulty = hard[0];
+      break;
+      default: window.difficulty = easy[0];
+  }
+  diffNum = n;
+  startGame();
+}
+function updateMove() {
+  if(selectedCell)
+  {
+      document.addEventListener('keydown', (event) => {
+          var name = event.key;
+          if(name>0 && name<10 && cani(name))
+          {
+          selectedCell.textContent = name;
+          addToArray(name);
+          addToCache();          
+          } else if(name==0){
+              selectedCell.textContent = null;
+              removeFromArray();
           }
-        });
-      });
-   }
-   
-   document.getElementById("validate").addEventListener("click", validateSudoku);
+        }, false);       
   }
- 
-
-  function setMediumBoard() {
-    const board = [
-      [8, 0, 0, 7, 3, 0, 0, 1, 0],
-      [0, 0, 5, 0, 0, 0, 2, 0, 6],
-      [1, 4, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 2, 0, 7, 0, 0, 0],
-      [0, 0, 8, 9, 0, 0, 4, 0, 3],
-      [0, 0, 0, 0, 4, 0, 0, 0, 0],
-      [0, 0, 6, 0, 0, 0, 0, 0, 0],
-      [0, 1, 0, 4, 0, 0, 9, 0, 8],
-      [9, 7, 0, 8, 0, 0, 0, 6, 0]
-    ]
-  
-    board.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        const cellIdx = rowIdx * 9 + colIdx + 1;
-        if (board[rowIdx][colIdx] === 0) {
-          document.querySelector(`#cell-${cellIdx} input`).value = "";
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-        } else {
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-          document.querySelector(`#cell-${cellIdx} input`).value =
-            board[rowIdx][colIdx];
-            document.querySelector(`#cell-${cellIdx}`).classList.add("placeholder")
-        }
-      });
-    });
-    function validateSudoku(){
-      board.forEach((row, rowIdx) => {
-        row.forEach((col, colIdx) => {
-          const cellIdx = rowIdx * 9 + colIdx + 1;
-          if (board[rowIdx][colIdx] == board1[rowIdx][colIdx]) {
-            document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-          } else {
-            document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-           document.querySelector(`#cell-${cellIdx}`).classList.add("cell-error")
-          }
-        });
-      });
-   }
-   
-   document.getElementById("validate").addEventListener("click", validateSudoku);
-  }
-
-
-  function setHardBoard() {
-    const board = [
-      [0, 5, 0, 0, 0, 0, 4, 0, 0],
-      [1, 6, 0, 8, 0, 0, 7, 0, 5],
-      [4, 0, 0, 0, 0, 0, 0, 2, 6],
-      [0, 4, 9, 0, 0, 0, 0, 0, 0],
-      [8, 0, 5, 6, 0, 0, 0, 0, 1],
-      [0, 0, 0, 0, 0, 0, 8, 7, 0],
-      [0, 0, 0, 3, 9, 0, 0, 6, 4],
-      [0, 0, 0, 0, 0, 6, 0, 1, 0],
-      [9, 0, 0, 0, 2, 0, 0, 0, 0]
-    ];
-  
-    board.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        const cellIdx = rowIdx * 9 + colIdx + 1;
-        if (board[rowIdx][colIdx] === 0) {
-          document.querySelector(`#cell-${cellIdx} input`).value = "";
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-        } else {
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-          document.querySelector(`#cell-${cellIdx} input`).value =
-            board[rowIdx][colIdx];
-            document.querySelector(`#cell-${cellIdx}`).classList.add("placeholder")
-        }
-      });
-    });
-    function validateSudoku(){
-      board.forEach((row, rowIdx) => {
-        row.forEach((col, colIdx) => {
-          const cellIdx = rowIdx * 9 + colIdx + 1;
-          if (board[rowIdx][colIdx] == board1[rowIdx][colIdx]) {
-            document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-          } else {
-            document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-           document.querySelector(`#cell-${cellIdx}`).classList.add("cell-error")
-          }
-        });
-      });
-   }
-   
-   document.getElementById("validate").addEventListener("click", validateSudoku);
-  }
-
-  /* function validateRow(rowNumber){
-    const values=[];
-    const cellStart=(rowNumber-1)*9+1;
-    const cellEnd=rowNumber*9;
-    for(let i=cellStart;i<=cellEnd;i++){
-      const v=document.querySelector(`#cell-${i} input`).value
-      if(v!=="")values.push(v)
-    }
-    let val=isSudokuArrayValid(values)
-    console.log(val)
-  }
-  const isSudokuArrayValid = (array) => {
-    const row = array.slice(0).sort().join(''),
-          passingRow = [1,2,3,4,5,6,7,8,9].join('');
-  
-    return (row === passingRow);
-  }; 
-  document.getElementById("validate").addEventListener("click", validateRow(1));  */
-   /* function validateRow(rowNumber){
-    const values=[];
-    const cellStart=(rowNumber-1)*9+1;
-    const cellEnd=rowNumber*9;
-    for(let i=cellStart;i<=cellEnd;i++){
-      const v=document.querySelector(`#cell-${i} input`).value
-      if(v!=="")values.push(v)
-    }
-    //values.sort()
-    for(let i=cellStart;i<cellEnd;i++){
-      const toFindDuplicates = arry => arry.filter((item, index) => arr.indexOf(item) !== index)
-      } 
-    }
-    
-     
- function validateRows(){
-  for(let i=1;i<=9;i++){
-    validateRow(i);
-  }
- }
-   
-  function validateSudoku(){
-    board.forEach((row, rowIdx) => {
-      row.forEach((col, colIdx) => {
-        const cellIdx = rowIdx * 9 + colIdx + 1;
-        if (board[rowIdx][colIdx] === board1[rowIdx][colIdx]) {
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-        } else {
-          document.querySelector(`#cell-${cellIdx}`).classList.remove("cell-error")
-         document.querySelector(`#cell-${cellIdx}`).classList.add("cell-error")
-        }
-      });
-    });
-   //return validateRow(1);
-   //return (_validate(_rows) && _validate(_cols) && _validate(_grid));
- } */
-
-    
-    /* let rows=[];
-    let columns=[];
-    let box=[];
-
-    // ROW LOOP
-function isValidSudoku(board) { 
-  for (let i = 0; i < board.length; i++) { 
-    for (let j = 0; j < board.length; j++) {
-
-      let cell = board[i][j];
-
-      if(cell !== "") {
-        if (rows[i].includes(cell) {
-          return false
-        } else rows[i].push(cell);
-
-        if (columns[j].includes(cell) {
-          return false;
-        } else columns[j].push(cell);
-
-        let boxIndex = Math.floor((i / 3)) * 3 + Math.floor(j / 3);
-
-        if (boxes[boxIndex].includes(cell) {
-          return false;
-        } else boxes[boxIndex].push(cell);
-
+  highSelect();
+}
+function startGame() {
+  let board;    
+  board = difficulty;    
+  fillAns(difficulty);    
+  createBoard(board);
+  if(sessionStorage.getItem("cache")){
+      var saved  = sessionStorage.getItem("cache");
+      var diff = sessionStorage.getItem("diff");
+      if(diff != diffNum){
+      if(diff==1) {
+          changeDifficulty(1);
+      } else if(diff==2) {
+          changeDifficulty(2);
+      } else if(diff==3) {
+          changeDifficulty(3);
       }
-    }
+          } else {
+          saved = saved.split(",");
+          answer = saved;
+          for(i=0;i<81;i++){
+          if(saved[i]!="-" && saved[i]!=difficulty[i]){
+          qA(".cell")[i].classList.add("modified"); 
+          id(i).textContent = saved[i];
+          }
+      }
+          }
+      
+  }
+}
+function highSelect() {
+  for(let i=0;i<81;i++) {
+  qA(".cell")[i].classList.remove("highlighted");
+  qA(".cell")[i].classList.remove("dup");
+  }
+  let col = parseInt(selectedCell.id % 9);
+  let row = parseInt(selectedCell.id / 9);
+  let s = selectedCell.id;
+  for(let i=0;i<81;i++){
+      if(parseInt(selectedCell.textContent)==answer[i])
+      document.getElementById(i).classList.add("dup");
+  }
+  for(let i=col;i<col+73;i+=9)
+  {
+      if(i!=s) {
+        document.getElementById(i).classList.add("highlighted");
+      }       
   } 
-
-  return true;
-
-} */
-
-function setEasyBoard() {
-  const board = [
-    [6, 0, 0, 0, 0, 0, 0, 7, 0],
-    [0, 0, 0, 0, 0, 5, 0, 2, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0, 0],
-    [3, 6, 2, 0, 0, 0, 0, 8, 1],
-    [0, 0, 9, 6, 0, 0, 0, 0, 0],
-    [7, 1, 0, 0, 9, 0, 4, 0, 5],
-    [0, 2, 0, 0, 0, 6, 5, 1, 0],
-    [0, 0, 7, 8, 0, 0, 0, 0, 3],
-    [4, 5, 0, 0, 0, 0, 0, 0, 0]
-  ];
-  board.forEach((row, rowIdx) => {
-    row.forEach((col, colIdx) => {
-      const cellIdx = rowIdx * 9 + colIdx + 1;
-      if (board[rowIdx][colIdx] === 0) {
-        document.querySelector(`#cell-${cellIdx} input`).value = "";
-        document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-      } else {
-        document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-        document.querySelector(`#cell-${cellIdx} input`).value =
-          board[rowIdx][colIdx];
-        document.querySelector(`#cell-${cellIdx}`).classList.add("placeholder")
+  for(let i=row*9;i<row*9+9;i++)
+  {
+      if(i!=s) {
+        document.getElementById(i).classList.add("highlighted");
       }
-    });
-  });
-}
- 
-
-function setMediumBoard() {
-  const board = [
-    [8, 0, 0, 7, 3, 0, 0, 1, 0],
-    [0, 0, 5, 0, 0, 0, 2, 0, 6],
-    [1, 4, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 2, 0, 7, 0, 0, 0],
-    [0, 0, 8, 9, 0, 0, 4, 0, 3],
-    [0, 0, 0, 0, 4, 0, 0, 0, 0],
-    [0, 0, 6, 0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 4, 0, 0, 9, 0, 8],
-    [9, 7, 0, 8, 0, 0, 0, 6, 0]
-  ]
-
-  board.forEach((row, rowIdx) => {
-    row.forEach((col, colIdx) => {
-      const cellIdx = rowIdx * 9 + colIdx + 1;
-      if (board[rowIdx][colIdx] === 0) {
-        document.querySelector(`#cell-${cellIdx} input`).value = "";
-        document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-      } else {
-        document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-        document.querySelector(`#cell-${cellIdx} input`).value =
-          board[rowIdx][colIdx];
-          document.querySelector(`#cell-${cellIdx}`).classList.add("placeholder")
+  }
+  let x = 0;
+  let y = 3;
+  if( (-1<s && s<3) || (8<s && s<12) || (17<s && s<21) ) {    
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }
       }
-    });
-  });
+  x = 3;
+  y = 6;
+  if( (2<s && s<6) || (11<s && s<15) || (20<s && s<24) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }
+  }
+  x = 6;
+  y = 9;
+  if( (5<s && s<9) || (14<s && s<18) || (23<s && s<27) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }       
+  }
+  x=27;
+  y=30;
+  if( (26<s && s<30) || (35<s && s<39) || (44<s && s<48) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }    
+  }
+  x = 30;
+  y = 33;
+  if( (29<s && s<33) || (38<s && s<42) || (47<s && s<51) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }    
+  }
+  x = 33;
+  y = 36;
+  if( (32<s && s<36) || (41<s && s<45) || (50<s && s<54) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }    
+  }
+  x = 54;
+  y = 57;
+  if( (53<s && s<57) || (62<s && s<66) || (71<s && s<75) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }    
+  }
+  x = 57;
+  y = 60;
+  if( (56<s && s<60) || (65<s && s<69) || (74<s && s<78) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }    
+  }
+  x = 60;
+  y = 63;
+  if( (59<s && s<63) || (68<s && s<72) || (77<s && s<81) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(j!=s) {
+                document.getElementById(j).classList.add("highlighted");
+              }
+              }
+          }   
+  }
 }
-
-
-function setHardBoard() {
-  const board = [
-    [0, 5, 0, 0, 0, 0, 4, 0, 0],
-    [1, 6, 0, 8, 0, 0, 7, 0, 5],
-    [4, 0, 0, 0, 0, 0, 0, 2, 6],
-    [0, 4, 9, 0, 0, 0, 0, 0, 0],
-    [8, 0, 5, 6, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 8, 7, 0],
-    [0, 0, 0, 3, 9, 0, 0, 6, 4],
-    [0, 0, 0, 0, 0, 6, 0, 1, 0],
-    [9, 0, 0, 0, 2, 0, 0, 0, 0]
-  ];
-
-  board.forEach((row, rowIdx) => {
-    row.forEach((col, colIdx) => {
-      const cellIdx = rowIdx * 9 + colIdx + 1;
-      if (board[rowIdx][colIdx] === 0) {
-        document.querySelector(`#cell-${cellIdx} input`).value = "";
-        document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-      } else {
-        document.querySelector(`#cell-${cellIdx}`).classList.remove("placeholder")
-        document.querySelector(`#cell-${cellIdx} input`).value =
-          board[rowIdx][colIdx];
-          document.querySelector(`#cell-${cellIdx}`).classList.add("placeholder")
+function createBoard(board) {
+  clearPrevious();
+  let idCell = 0;
+  for(let i=0;i<81;i++){
+      let cell  = document.createElement("p");
+      if(board.charAt(i)!="-") {
+          cell.textContent = board.charAt(i);
+          cell.classList.add("prefilled");
+      }   else {
+          cell.addEventListener("click", function(){
+              if(cell.classList.contains("selected")) {
+                  cell.classList.remove("selected");
+                  selectedCell = null;
+              } else {
+                  for(let i=0;i<81;i++) {
+                      document.querySelectorAll(".cell")[i].classList.remove("selected");
+                  }                  
+              }
+              cell.classList.add("selected");
+              selectedCell = cell;
+              updateMove();
+          }); 
       }
-    });
-  });
+      cell.id = idCell;
+      idCell++;
+      cell.classList.add("cell");
+      if((cell.id > 17 && cell.id < 27) || (cell.id > 44 && cell.id < 54 )) {
+          cell.classList.add("bottomBorder");
+      }
+      if( ((cell.id + 1) % 9 == 3) || ((cell.id + 1) % 9 == 6) ) {
+          cell.classList.add("rightBorder");
+      }
+      if((cell.id + 1) % 9 == 0 || (cell.id + 1) % 9 == 0) {
+            cell.classList.add("rightBorder");
+       }
+      if((cell.id + 2) % 9 == 2 || (cell.id + 2) % 9 == 2) {
+          cell.classList.add("leftBorder");
+     }
+      if((cell.id > 71 && cell.id < 81)) {
+          cell.classList.add("bottomBorder");
+      }
+      if((cell.id > -1 && cell.id < 9)) {
+          cell.classList.add("topBorder");
+      }
+      document.getElementById("board").appendChild(cell);
+  }
 }
-
-
-function validateRows(rowNumber){
-  const values=[];
-    const cellStart=(rowNumber-1)*9+1;
-    const cellEnd=rowNumber*9;
-    for(let i=cellStart;i<=cellEnd;i++){
-      const v=document.querySelector(`#cell-${i} input`).value
-      if(v!=="")values.push(v)
-    }
-    console.log(values)
-    
+function clearPrevious() {
+  let cells = document.querySelectorAll(".cell")
+  for(let i=0;i<cells.length;i++)
+  {
+      cells[i].remove();
+  }
 }
-
-function validateRow(){
-  for(let i=1;i<=9;i++)
-   validateRows(i);
+function reset(){
+  let diff = sessionStorage.getItem("diff");
+  sessionStorage.clear();
+  changeDifficulty(diff);
 }
-
-function validateSudoku(){
-  if(validateRow && validateColumn && validateBox)
-  alert("Well done! You successfully solved sudoku");
-  else
-  alert("Try Again!There is an error")
+function fillAns(str) {
+  for(let i=0;i<str.length;i++) {
+      answer[i] = str[i];
+  }  
 }
-
-window.onload=function(){
-  document.getElementById("easy").addEventListener("click", setEasyBoard);
+function addToCache() {
+  sessionStorage.setItem("cache",answer);
+  sessionStorage.setItem("diff",diffNum);
+}
+function addToArray(num) {
+  let index = q(".selected").id;
+  answer.splice(index,1,num);
+  q(".selected").classList.add("modified");
+  duplicate(num);
+}
+function removeFromArray() {
+  let index = q(".selected").id;
+  answer.splice(index,1,"-");
+  q(".selected").classList.remove("modified");
+}
+function duplicate(num) {
+  for(let i=0;i<81;i++){
+      if(num==answer[i])
+      id(i).classList.add("dup");
+  }
+}
+function validate() {
+  let status= 1;
+ for(let i=0;i<answer.length;i++)
+ {
+     let sum=0;
   
-  document.getElementById("medium").addEventListener("click", setMediumBoard);
-
-  document.getElementById("hard").addEventListener("click", setHardBoard);
-  
-  document.getElementById("validate").addEventListener("click",validateRows(1));
+ for(let i=0;i<9;i++){
+     if(answer!="-")
+  sum+=parseInt(answer[i]);
+     for(let j=i+9;j<81;j+=9){
+      if(answer!="-")
+         sum+=parseInt(answer[j]);
+     }
  }
+ if(sum!=405){
+  status = 0;
+ }  
+  }
+  if(status==1){
+      endGame();
+      return;
+     } else {
+      alert("Something is not right, Try again.");
+     }   
+}
+function endGame() {
+  sessionStorage.clear();
+  for(let i=0;i<81;i++){
+      id(i).classList.add("prefilled");      
+  }
+  alert("You Win!, GGWP!");
+}
+function cani(num) {
+  let pass = 1;
+  let col = parseInt(selectedCell.id % 9);
+  let row = parseInt(selectedCell.id / 9);
+  let s = selectedCell.id;
+  for(let i=col;i<col+73;i+=9)
+  {
+      if(num==answer[i]){
+          pass = 0;
+          break;
+      }
+  }
+  for(let i=row*9;i<row*9+9;i++)
+  {
+      if(num==answer[i]){
+          pass = 0;
+          break;
+      }
+  }
+  let x = 0;
+  let y = 3;
+  if( (-1<s && s<3) || (8<s && s<12) || (17<s && s<21) ) {    
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }
+      }
+  x = 3;
+  y = 6;
+  if( (2<s && s<6) || (11<s && s<15) || (20<s && s<24) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }
+  }
+  x = 6;
+  y = 9;
+  if( (5<s && s<9) || (14<s && s<18) || (23<s && s<27) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }       
+  }
+  x=27;
+  y=30;
+  if( (26<s && s<30) || (35<s && s<39) || (44<s && s<48) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }    
+  }
+  x = 30;
+  y = 33;
+  if( (29<s && s<33) || (38<s && s<42) || (47<s && s<51) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }    
+  }
+  x = 33;
+  y = 36;
+  if( (32<s && s<36) || (41<s && s<45) || (50<s && s<54) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }    
+  }
+  x = 54;
+  y = 57;
+  if( (53<s && s<57) || (62<s && s<66) || (71<s && s<75) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }    
+  }
+  x = 57;
+  y = 60;
+  if( (56<s && s<60) || (65<s && s<69) || (74<s && s<78) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }    
+  }
+  x = 60;
+  y = 63;
+  if( (59<s && s<63) || (68<s && s<72) || (77<s && s<81) ) {
+      for(let i=x;i<y;i++){
+          for(let j=i;j<i+19;j+=9){
+              if(num==answer[j]){
+                  pass = 0;
+                  break;
+              }
+              }
+          }   
+  }
+  return pass;
+}
+function printSession() {
+  console.log(sessionStorage.getItem("cache"));
+  console.log(sessionStorage.getItem("diff"));  
+}
