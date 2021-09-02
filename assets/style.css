@@ -1,10 +1,11 @@
 *{
     box-sizing: border-box;
+    background: transparent
 }
 body{
     font-family: Source Sans Pro,sans-serif;
-font-size: 25px;
-text-align: center;
+    font-size: 25px;
+    text-align: center;
 
 }
 table{
@@ -12,7 +13,6 @@ table{
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
-    background: transparent;
 
     
 }
@@ -40,10 +40,43 @@ td input{
     text-align: center;
 }
 .placeholder{
-    border: 5px solid green;
-    background-color: #bec6d4;
-    
+    background-color: #ebebe4; 
+    font-weight: bolder; 
+    pointer-events: none;
 }
 .cell-error{
     border:3px solid red;
+}
+button{
+    background: #ebebe4;
+    border: none;
+    height: 30px;
+    width: 100px;
+    font-weight: 500;
+    font-size: 25px;
+}
+#validate{
+    margin:20px ;
+}
+#easy{
+    margin-right:100px;
+    margin-bottom: 20px;
+}
+#medium{
+    margin-right:100px;
+    margin-left: 100px;
+    margin-bottom: 20px;
+}
+#hard{
+    margin-left:100px;
+    margin-bottom: 20px;
+}
+button:active{
+   border: 2px solid #a6bde6;
+}
+table tr td div:hover{
+background: #b7ddfd;
+}
+table tr td div:checked{
+    border: 21px solid rgb(54, 132, 168);
 }
