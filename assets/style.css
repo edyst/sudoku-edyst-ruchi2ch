@@ -90,7 +90,7 @@ button:active{
 }
 
 .placeholder {
-  background-color: #e8e8e4 ;
+  background-color: #e8e8e4 !important ;
   user-select: none;
   font-size: 45px;
 }
@@ -98,9 +98,10 @@ button:active{
 p.selected {
   background-color: lightblue;
 }
-
+p:placeholder-shown{
+  background-color: pink;
+}
 p.cellError {
   color: red !important;
-  background-color: rgb(165, 200, 247);
+  background-color: #c5d3e6;
 }
-

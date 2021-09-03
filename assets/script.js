@@ -61,7 +61,7 @@ function update() {
 function startSudoku() {
   let board;
   board = diff;
-  setDiff(diff);
+  fillAns(diff);
   gameBoard(board);
 }
 
@@ -123,7 +123,7 @@ function clearPrevious() {
     cells[i].remove();
   }
 }
-function setDiff(str) {
+function fillAns(str) {
   for (let i = 0; i < str.length; i++) {
     solution[i] = str[i];
   }
